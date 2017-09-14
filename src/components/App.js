@@ -12,44 +12,41 @@ class App extends Component {
       currentFilter: null
     };
 
-
+    this.fetchFilters = this.fetchFilters.bind(this);
+    this.updateFilter = this.updateFilter.bind(this);
   }
 
-  this.fetchFilters = this.fetchFilters.bind(this);
-  this.updateFilter = this.updateFilter.bind(this);
-}
+  componentWillMount() {
+    this.fetchFilters();
+    this.fetchFruit();
+  }
 
-componentWillMount() {
-  this.fetchFilters();
-  this.fetchFruit();
-}
+  fetchFilters() {
+    fetch('/api/fruit_types')
+      .then(res => res.json())
+      .then(filters => this.setState({filters: filters}));
+  }
 
-fetchFilters() {
-  fetch('/api/fruit_types')
-    .then(res => res.json())
-    .then(filters => this.setState({filters: filters}));
-}
+  fetchFruit() {
+    fetch('/api/fruit')
+      .then(res => res.json())
+      .then(fruit => this.setState({ fruit: fruit }));
+  }
 
-fetchFruit() {
-  fetch('/api/fruit')
-    .then(res => res.json())
-    .then(fruit => this.setState({ fruit: fruit }));
-}
+  updateFilter(e) {
+    console.log('update filter to: ', e.target.value);
+    this.setState({ currentFilter: e.target.value });
+  }
 
-updateFilter(e) {
-  console.log('update filter to: ', e.target.value);
-  this.setState({ currentFilter: e.target.value });
-}
-
-render() {
-  return (
-    <FruitBasket
-      fruit={this.state.fruit}
-      filters={this.state.filters}
-      currentFilter={this.state.currentFilter}
-      updateFilterCallback={this.updateFilter} />
-  );
-}
+  render() {
+    return (
+      <FruitBasket
+        fruit={this.state.fruit}
+        filters={this.state.filters}
+        currentFilter={this.state.currentFilter}
+        updateFilterCallback={this.updateFilter} />
+    );
+  }
 }
 
 export default App;
